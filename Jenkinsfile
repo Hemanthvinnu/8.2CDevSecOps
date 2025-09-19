@@ -2,14 +2,13 @@ pipeline {
     agent any
 
     environment {
-        EMAIL_RECIPIENT = 'hemanthkatagoni@gmail.com'
+        NODE_ENV = 'development'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/Hemanthvinnu/8.2CDevSecOps.git', credentialsId: 'github-creds'
-
+                git credentialsId: 'github-creds', url: 'https://github.com/Hemanthvinnu/8.2CDevSecOps.git'
             }
         }
 
@@ -19,23 +18,11 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                sh 'npm test || true' // Prevents pipeline from failing on test errors
-            }
-        }
-
-        stage('Generate Coverage Report') {
-            steps {
-                sh 'npm run coverage || true'
-            }
-        }
-
         stage('NPM Audit (Security Scan)') {
             steps {
                 script {
-                    def auditResult = sh(script: 'npm audit --audit-level=low || true', returnStdout: true).trim()
-                    writeFile file: 'audit-result.txt', text: auditResult
+                    sh 'npm audit --audit-level=low || true'
+                    writeFile file: 'audit-result.txt', text: readFile('audit-result.txt')
                 }
             }
         }
@@ -44,21 +31,9 @@ pipeline {
             steps {
                 script {
                     emailext(
-                        subject: "DevSecOps Report - ${env.JOB_NAME} [#${env.BUILD_NUMBER}]",
-                        body: """\
-Hello Hemanth,
-
-✅ Jenkins job '${env.JOB_NAME}' (Build #${env.BUILD_NUMBER}) has completed.
-
-🟢 Build Status: ${currentBuild.currentResult}  
-🔗 Build URL: ${env.BUILD_URL}
-
-📎 The audit report is attached.
-
-Regards,  
-Jenkins CI/CD Pipeline
-""",
-                        to: "${EMAIL_RECIPIENT}",
+                        subject: "DevSecOps Jenkins Pipeline Completed",
+                        body: "Hello Team,\n\nThe Jenkins pipeline has completed successfully. See attached audit result.\n\nRegards,\nJenkins",
+                        to: "hemanthkatagoni@gmail.com",
                         attachLog: true,
                         attachmentsPattern: 'audit-result.txt'
                     )

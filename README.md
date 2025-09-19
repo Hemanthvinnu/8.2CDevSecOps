@@ -1,4 +1,6 @@
 <!-- Trigger build -->
+
+
 # Goof - Snyk's vulnerable demo app
 [![Known Vulnerabilities](https://snyk.io/test/github/snyk/goof/badge.svg?style=flat-square)](https://snyk.io/test/github/snyk/goof)
 
@@ -217,5 +219,6 @@ When the wizard is done, restart the application and run the exploits again to c
  
  #   T r i g g e r   J e n k i n s   b u i l d 
  
-    
+   
+ 
  

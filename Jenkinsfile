@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git credentialsId: 'github-creds', url: 'https://github.com/Hemanthvinnu/8.2CDevSecOps.git'
+                checkout scm
             }
         }
 
@@ -21,8 +21,8 @@ pipeline {
         stage('NPM Audit (Security Scan)') {
             steps {
                 script {
-                    sh 'npm audit --audit-level=low || true'
-                    writeFile file: 'audit-result.txt', text: readFile('audit-result.txt')
+                    // Save audit result to file
+                    sh 'npm audit --audit-level=low > audit-result.txt || true'
                 }
             }
         }

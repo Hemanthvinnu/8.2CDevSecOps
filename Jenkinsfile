@@ -5,21 +5,16 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Running test stage...'
-                sh 'echo "Tests ran successfully" > test.log'
+                sh 'echo "Tests ran successfully" > test-log.txt'
+                sh 'cat test-log.txt'
             }
             post {
                 always {
-                    emailext (
-                        subject: "Jenkins - TEST Stage Result: ${currentBuild.currentResult}",
-                        body: """Hello,
-                        
-The test stage has completed with status: ${currentBuild.currentResult}.
-
-Please find the attached test log.
-
-""",
+                    emailext(
+                        subject: "Jenkins Build - TEST stage",
+                        body: "The test stage has completed.",
                         to: "hemanthkatagoni@gmail.com",
-                        attachmentsPattern: 'test.log',
+                        attachmentsPattern: 'test-log.txt',
                         attachLog: true
                     )
                 }
@@ -29,25 +24,20 @@ Please find the attached test log.
         stage('Security Scan') {
             steps {
                 echo 'Running security scan...'
-                sh 'npm audit > audit.log || true'
+                sh 'npm audit --json > audit-log.json || exit 0'
+                sh 'cat audit-log.json'
             }
             post {
-    always {
-        emailext (
-            subject: "Jenkins - TEST Stage #${BUILD_NUMBER} - ${new Date()}",
-            body: """Hello,
-
-The test stage completed.
-
-Please check attached log.""",
-            to: "hemanthkatagoni@gmail.com",
-            attachLog: true,
-            attachmentsPattern: 'test.log'
-        )
-    }
-}
+                always {
+                    emailext(
+                        subject: "Jenkins Build - SECURITY SCAN stage",
+                        body: "Security scan completed. See attached log.",
+                        to: "hemanthkatagoni@gmail.com",
+                        attachmentsPattern: 'audit-log.json',
+                        attachLog: true
+                    )
+                }
+            }
         }
     }
-
-    // REMOVE global post to avoid duplicate emails
 }

@@ -20,7 +20,6 @@ pipeline {
                 }
             }
         }
-
         stage('Security Scan') {
             steps {
                 echo 'Running security scan...'

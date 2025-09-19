@@ -7,16 +7,6 @@ pipeline {
                 echo 'Running test stage...'
                 sh 'echo "Tests ran successfully"'
             }
-            post {
-                always {
-                    emailext (
-                        subject: "Jenkins Build - TEST stage",
-                        body: "The test stage has completed.",
-                        to: "hemanthkatagoni@gmail.com",
-                        attachLog: true
-                    )
-                }
-            }
         }
 
         stage('Security Scan') {
@@ -24,16 +14,17 @@ pipeline {
                 echo 'Running security scan...'
                 sh 'npm audit || exit 0'
             }
-            post {
-                always {
-                    emailext (
-                        subject: "Jenkins Build - SECURITY SCAN stage",
-                        body: "Security scan completed.",
-                        to: "hemanthkatagoni@gmail.com",
-                        attachLog: true
-                    )
-                }
-            }
+        }
+    }
+
+    post {
+        always {
+            emailext (
+                subject: "Jenkins Build [${env.JOB_NAME} #${env.BUILD_NUMBER}] - ${currentBuild.currentResult}",
+                body: "The pipeline has completed with status: ${currentBuild.currentResult}.",
+                to: "hemanthkatagoni@gmail.com",
+                attachLog: true
+            )
         }
     }
 }

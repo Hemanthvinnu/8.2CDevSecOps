@@ -31,12 +31,13 @@ pipeline {
             steps {
                 script {
                     emailext(
-                        subject: "DevSecOps Jenkins Pipeline Completed",
-                        body: "Hello Team,\n\nThe Jenkins pipeline has completed successfully. See attached audit result.\n\nRegards,\nJenkins",
-                        to: "hemanthkatagoni@gmail.com",
-                        attachLog: true,
-                        attachmentsPattern: 'audit-result.txt'
-                    )
+    subject: "DevSecOps Jenkins Pipeline Completed",
+    body: "Hello Team,\n\nThe Jenkins pipeline has completed successfully. See attached audit result.\n\nRegards,\nJenkins",
+    to: 'hemanthkatagoni@gmail.com',
+    attachLog: true,
+    attachmentsPattern: 'audit-result.txt',
+    recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']]
+)
                 }
             }
         }

@@ -12,7 +12,8 @@ pipeline {
         stage('Security Scan') {
             steps {
                 echo 'Running security scan...'
-                sh 'npm audit || exit 0'
+                // Ignore errors so job doesn't fail
+                sh 'npm audit || true'
             }
         }
     }
@@ -20,8 +21,8 @@ pipeline {
     post {
         always {
             emailext (
-                subject: "Jenkins Build [${env.JOB_NAME} #${env.BUILD_NUMBER}] - ${currentBuild.currentResult}",
-                body: "The pipeline has completed with status: ${currentBuild.currentResult}.",
+                subject: "Jenkins Build - ${currentBuild.currentResult}",
+                body: "Build result: ${currentBuild.currentResult}\n\nSee attached console log for more details.",
                 to: "hemanthkatagoni@gmail.com",
                 attachLog: true
             )

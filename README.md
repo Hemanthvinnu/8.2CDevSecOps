@@ -1,3 +1,5 @@
+<!-- Trigger build -->
+
 # Goof - Snyk's vulnerable demo app
 [![Known Vulnerabilities](https://snyk.io/test/github/snyk/goof/badge.svg?style=flat-square)](https://snyk.io/test/github/snyk/goof)
 
@@ -212,6 +214,8 @@ snyk wizard
 
 In this application, the default `snyk wizard` answers will fix all the issues.
 When the wizard is done, restart the application and run the exploits again to confirm they are fixed.
-#   t e s t   t r i g g e r  
- #   T r i g g e r   J e n k i n s   b u i l d  
+#   t e s t   t r i g g e r 
+ 
+ #   T r i g g e r   J e n k i n s   b u i l d 
+ 
  

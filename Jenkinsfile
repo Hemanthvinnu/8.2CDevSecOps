@@ -13,7 +13,7 @@ pipeline {
             steps {
                 echo 'Running security scan...'
                 // Ignore errors so job doesn't fail
-                sh 'npm audit || true'
+                sh 'npm audit > audit.log || true'
             }
         }
     }
@@ -21,11 +21,12 @@ pipeline {
     post {
         always {
             emailext (
-                subject: "Jenkins Build - ${currentBuild.currentResult}",
-                body: "Build result: ${currentBuild.currentResult}\n\nSee attached console log for more details.",
-                to: "hemanthkatagoni@gmail.com",
-                attachLog: true
-            )
+                      subject: "Security Scan Logs",
+                      body: "Attached audit logs.",
+                      to: "hemanthkatagoni@gmail.com",
+                      attachmentsPattern: 'audit.log',
+                      attachLog: true
+)
         }
     }
 }
